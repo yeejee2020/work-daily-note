@@ -50,3 +50,18 @@ document.getElementById("workForm").addEventListener("submit", async e => {
     date.value = new Date().toISOString().split("T")[0];
     loadRecords();
 });
+document.getElementById("searchBtn").addEventListener("click", () => {
+    const date = document.getElementById("searchDate").value;
+    const contact = document.getElementById("searchContact").value;
+
+    loadRecords({
+        date,
+        contact
+    });
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+    document.getElementById("searchDate").value = "";
+    document.getElementById("searchContact").value = "";
+    loadRecords();
+});
