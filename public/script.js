@@ -1,8 +1,9 @@
 document.getElementById("date").value =
     new Date().toISOString().split("T")[0];
 
-async function loadRecords() {
-    const res = await fetch("/api/logs");
+async function loadRecords(params = {}) {
+    const query = new URLSearchParams(params).toString();
+    const res = await fetch(`/api/logs?${query}`);
     const data = await res.json();
 
     const container = document.getElementById("records");
@@ -23,6 +24,7 @@ async function loadRecords() {
         container.appendChild(div);
     });
 }
+
 
 loadRecords();
 
