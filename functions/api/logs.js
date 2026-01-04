@@ -1,11 +1,32 @@
 export async function onRequest(context) {
     const { request, env } = context;
     const db = env.DB;
+    const url = new URL(request.url);
 
     if (request.method === "GET") {
+        const date = url.searchParams.get("date");
+        const contact = url.searchParams.get("contact");
+
+        let sql = "SELECT * FROM work_logs WHERE 1=1";
+        const params = [];
+
+        if (date) {
+            sql += " AND date = ?";
+            params.push(date);
+        }
+
+        if (contact) {
+            sql += " AND contact LIKE ?";
+            params.push(`%${contact}%`);
+        }
+
+        sql += " ORDER BY id DESC";
+
         const { results } = await db
-            .prepare("SELECT * FROM work_logs ORDER BY id DESC")
+            .prepare(sql)
+            .bind(...params)
             .all();
+
         return new Response(JSON.stringify(results), {
             headers: { "Content-Type": "application/json" }
         });
